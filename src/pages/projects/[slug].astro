@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import ProjectMeta from '@/components/ProjectMeta.astro';
+import ProjectLinks from '@/components/ProjectLinks.astro';
+import Toc from '@/components/Toc.astro';
+import Figure from '@/components/mdx/Figure.astro';
+import Demo from '@/components/mdx/Demo.astro';
+import Callout from '@/components/mdx/Callout.astro';
+import { getProjects, href, type Project } from '@/lib/site';
+import '@/styles/prose.css';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, newer: projects[i - 1], older: projects[i + 1] },
+  }));
+}
+
+interface Props {
+  project: Project;
+  newer?: Project;
+  older?: Project;
+}
+
+const { project, newer, older } = Astro.props;
+const { title, summary, status, cover, coverAlt } = project.data;
+const { Content, headings } = await render(project);
+---
+
+<Base title={title} description={summary}>
+  <article class="wrap">
+    <p class="back"><a href={href('/projects/')}>All projects</a></p>
+
+    {
+      status === 'template' && (
+        <p class="template-note">
+          <span class="label">Template</span>
+          <strong>This is a placeholder, not a real project.</strong> It shows how a project page
+          is laid out. To remove it, delete the folder{' '}
+          <code>src/content/projects/{project.id}</code>.
+        </p>
+      )
+    }
+
+    <header class="head">
+      <h1 class="display">{title}</h1>
+      <p class="summary">{summary}</p>
+      <ProjectLinks project={project} />
+    </header>
+
+    <ProjectMeta project={project} />
+
+    {
+      cover && (
+        <div class="cover">
+          <Image src={cover} alt={coverAlt} widths={[640, 1024, 1600]} sizes="(min-width: 84rem) 80rem, 100vw" loading="eager" />
+        </div>
+      )
+    }
+
+    <div class="body">
+      <aside class="side no-print">
+        <Toc headings={headings} />
+      </aside>
+      <div class="prose">
+        <Content components={{ Figure, Demo, Callout }} />
+      </div>
+    </div>
+
+    {
+      (newer || older) && (
+        <nav class="pager" aria-label="More projects">
+          {older ? (
+            <a href={href(`/projects/${older.id}/`)}>
+              <span class="muted small">Next project</span>
+              <span class="display">{older.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a class="right" href={href(`/projects/${newer.id}/`)}>
+              <span class="muted small">Previous project</span>
+              <span class="display">{newer.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .back {
+    padding-top: var(--s-3);
+    font-size: var(--step--1);
+  }
+
+  .template-note {
+    margin-top: var(--s-3);
+    padding: 1rem 1.2rem 1.1rem;
+    max-width: 30rem;
+    background: var(--pink-light);
+    color: var(--charcoal);
+    box-shadow: var(--lift);
+    transform: rotate(-0.8deg);
+    font-size: 0.95rem;
+  }
+
+  .template-note .label {
+    display: block;
+    color: var(--wine);
+    margin-bottom: 0.3rem;
+  }
+
+  .template-note code {
+    font-family: var(--code);
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+
+  .head {
+    padding-block: clamp(1.5rem, 4vw, 3.5rem) var(--s-4);
+  }
+
+  h1 {
+    font-size: var(--step-5);
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+
+  .summary {
+    margin-block: var(--s-3);
+    max-width: 48ch;
+    font-size: clamp(1.15rem, 0.95rem + 0.7vw, 1.45rem);
+    line-height: 1.45;
+  }
+
+  .cover {
+    margin-top: var(--s-4);
+    padding: clamp(0.5rem, 1.2vw, 0.9rem);
+    background: var(--card);
+    box-shadow: var(--lift);
+    transform: rotate(0.4deg);
+  }
+
+  .cover :global(img) {
+    width: 100%;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 54rem);
+    gap: var(--s-5);
+    margin-top: var(--s-5);
+    counter-reset: figure;
+  }
+
+  .side {
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+    padding-top: var(--s-3);
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .pager a {
+    display: grid;
+    gap: 0.3rem;
+    text-decoration: none;
+  }
+
+  .pager .display {
+    font-size: var(--step-2);
+  }
+
+  .pager .right {
+    text-align: right;
+  }
+
+  @media (max-width: 64rem) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-4);
+    }
+
+    .side {
+      position: static;
+      padding-bottom: var(--s-3);
+      border-bottom: 1px solid var(--rule);
+    }
+  }
+</style>

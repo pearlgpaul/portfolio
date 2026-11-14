@@ -1,0 +1,27 @@
+---
+/** A small outlined label for skills, topics and technologies. */
+interface Props {
+  tone?: 'outline' | 'tint';
+}
+const { tone = 'outline' } = Astro.props;
+---
+
+<span class:list={['tag', tone]}><slot /></span>
+
+<style>
+  .tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    padding: 0.28em 0.75em;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+    white-space: nowrap;
+  }
+
+  .tint {
+    background: var(--highlight);
+    border-color: transparent;
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+/**
+ * A row of joined label/value plates, like the spec stickers on a compact camera.
+ */
+interface Props {
+  items: { label: string; value: string; href?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<dl class="spec">
+  {
+    items.map((item) => (
+      <div>
+        <dt class="label">{item.label}</dt>
+        <dd>{item.href ? <a href={item.href}>{item.value}</a> : item.value}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .spec {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    width: fit-content;
+    max-width: 100%;
+    padding: 3px;
+    background: var(--ink);
+    border-radius: 7px;
+  }
+
+  .spec > div {
+    flex: 1 1 auto;
+    padding: 0.5rem 0.85rem 0.55rem;
+    border-radius: 4px;
+    min-width: 0;
+  }
+
+  .spec > div:nth-child(4n + 1) {
+    background: var(--ink);
+    color: var(--card);
+  }
+
+  .spec > div:nth-child(4n + 2) {
+    background: #8f8a8a;
+    color: #fff;
+  }
+
+  .spec > div:nth-child(4n + 3) {
+    background: linear-gradient(160deg, #ecebe8, var(--silver) 55%, #e2e1de);
+    color: var(--charcoal);
+  }
+
+  .spec > div:nth-child(4n + 4) {
+    background: var(--card);
+  }
+
+  dt {
+    opacity: 0.8;
+    font-size: 0.6rem;
+  }
+
+  dd {
+    font-weight: 620;
+    font-size: var(--step--1);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover {
+    color: inherit;
+    text-decoration-thickness: 2px;
+  }
+</style>

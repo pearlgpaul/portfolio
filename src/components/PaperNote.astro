@@ -1,0 +1,55 @@
+---
+/** A ruled slip of paper held on with a strip of tape. */
+interface Props {
+  tilt?: number;
+}
+const { tilt = -1 } = Astro.props;
+---
+
+<div class="note" style={`--tilt:${tilt}deg`}>
+  <slot />
+</div>
+
+<style>
+  .note {
+    --line: 1.95rem;
+    position: relative;
+    background-color: var(--card);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--line) - 1px),
+      var(--note-line) calc(var(--line) - 1px) var(--line)
+    );
+    background-position: 0 1.55rem;
+    padding: calc(var(--line) + 0.95rem) clamp(1.2rem, 3vw, 2.2rem) calc(var(--line) * 1);
+    box-shadow: var(--lift);
+    transform: rotate(var(--tilt));
+    font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.2rem);
+    line-height: var(--line);
+  }
+
+  /* tape */
+  .note::before {
+    content: '';
+    position: absolute;
+    top: -0.9rem;
+    left: 50%;
+    width: 7.5rem;
+    height: 1.9rem;
+    background: color-mix(in srgb, var(--pink-light) 82%, transparent);
+    transform: translateX(-50%) rotate(-2.5deg);
+    box-shadow: 0 1px 2px rgb(42 37 38 / 0.12);
+  }
+
+  @media print {
+    .note {
+      transform: none;
+      box-shadow: none;
+      background: none;
+      padding: 0;
+    }
+    .note::before {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Placeholder cover image">
+  <rect width="1600" height="700" fill="#2a2526"/>
+  <g fill="none" stroke="#f6bfd3" stroke-opacity=".28" stroke-width="1.5">
+    <path d="M0 175h1600M0 350h1600M0 525h1600M400 0v700M800 0v700M1200 0v700"/>
+  </g>
+  <circle cx="800" cy="350" r="150" fill="#f3eee4"/>
+  <circle cx="745" cy="295" r="44" fill="#7a1730"/>
+  <text x="80" y="620" fill="#f3eee4" font-family="Helvetica, Arial, sans-serif" font-size="30">Cover image placeholder. Replace cover.svg with a screenshot or diagram (16:7 works well).</text>
+</svg>

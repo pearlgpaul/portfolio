@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-label="Placeholder architecture diagram with four connected stages">
+  <rect width="1200" height="420" fill="#fbf8f1"/>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#2a2526" text-anchor="middle">
+    <g fill="none" stroke="#2a2526" stroke-width="2.5">
+      <rect x="60" y="150" width="220" height="120" rx="8"/>
+      <rect x="350" y="150" width="220" height="120" rx="8"/>
+      <rect x="640" y="150" width="220" height="120" rx="8" fill="#f6bfd3"/>
+      <rect x="930" y="150" width="220" height="120" rx="8"/>
+    </g>
+    <g stroke="#7a1730" stroke-width="3" fill="#7a1730">
+      <path d="M280 210h56M570 210h56M860 210h56" fill="none"/>
+      <path d="M336 201l14 9-14 9zM626 201l14 9-14 9zM916 201l14 9-14 9z"/>
+    </g>
+    <text x="170" y="218">Input</text>
+    <text x="460" y="218">Stage one</text>
+    <text x="750" y="218">Stage two</text>
+    <text x="1040" y="218">Output</text>
+    <text x="600" y="350" font-size="20" fill="#6b5f62">Placeholder diagram. Replace architecture.svg with your own.</text>
+  </g>
+</svg>

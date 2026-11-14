@@ -1,0 +1,149 @@
+---
+/** Site navigation, drawn as the tabs on top of the folder. */
+import { person } from '@/data/resume';
+import { href } from '@/lib/site';
+
+const inProjects = Astro.url.pathname.includes('/projects');
+const tabs = [
+  { label: 'Resume', to: href('/'), current: !inProjects },
+  { label: 'Projects', to: href('/projects/'), current: inProjects },
+];
+---
+
+<header class="site-header">
+  <nav aria-label="Main">
+    <ul>
+      {
+        tabs.map((t) => (
+          <li>
+            <a class="tab label" href={t.to} aria-current={t.current ? 'page' : undefined}>
+              {t.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="actions">
+    <button class="theme label" type="button" data-theme-toggle>
+      <span class="icon" aria-hidden="true"></span>
+      <span class="to-dark">Dark<span class="visually-hidden"> mode</span></span>
+      <span class="to-light">Light<span class="visually-hidden"> mode</span></span>
+    </button>
+    <a class="contact label" href={`mailto:${person.email}`}>Email me</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    width: calc(100% - 2 * var(--desk));
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-top: clamp(0.8rem, 2vw, 1.6rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  ul {
+    display: flex;
+    gap: 4px;
+  }
+
+  .tab {
+    display: block;
+    padding: 0.7rem clamp(1rem, 3vw, 1.9rem) 0.6rem;
+    border-radius: 14px 14px 0 0;
+    background: var(--pink);
+    color: var(--charcoal);
+    text-decoration: none;
+    font-size: 0.74rem;
+    transition:
+      background-color 0.15s ease,
+      padding 0.15s ease;
+  }
+
+  .tab:hover {
+    background: var(--pink-light);
+    color: var(--charcoal);
+  }
+
+  .tab[aria-current='page'] {
+    background: var(--paper);
+    color: var(--ink);
+    padding-top: 0.95rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .contact,
+  .theme {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.9rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: none;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  /* Hover only where there is a real pointer, so the fill doesn't stick after a tap. */
+  @media (hover: hover) {
+    .contact:hover,
+    .theme:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+  }
+
+  /* Half-filled circle; flips when the theme changes. */
+  .icon {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+    transition: transform 0.3s ease;
+  }
+
+  :global([data-theme='dark']) .icon {
+    transform: rotate(180deg);
+  }
+
+  .to-light,
+  :global([data-theme='dark']) .to-dark {
+    display: none;
+  }
+
+  :global([data-theme='dark']) .to-light {
+    display: inline;
+  }
+
+  @media (max-width: 30rem) {
+    .theme {
+      padding-inline: 0.5rem;
+    }
+
+    .theme .to-dark,
+    .theme .to-light {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .contact {
+      padding-inline: 0.65rem;
+    }
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+/**
+ * Embeds a live demo in the page.
+ *
+ *   <Demo src="https://your-app.streamlit.app/?embed=true" title="Chat with the agent" />
+ *   <Demo src="/demos/my-project/" height={480} />   (a static demo in public/demos/)
+ *
+ * Without `src` it shows an empty frame, which is useful while a demo is being built.
+ */
+import { href } from '@/lib/site';
+
+interface Props {
+  src?: string;
+  title?: string;
+  height?: number;
+}
+const { src, title = 'Live demo', height = 560 } = Astro.props;
+const url = src?.startsWith('/') ? href(src) : src;
+---
+
+<div class="demo">
+  <div class="bar">
+    <span class="label">{title}</span>
+    {
+      url && (
+        <a href={url} rel="noopener">
+          Open in a new tab
+        </a>
+      )
+    }
+  </div>
+  {
+    url ? (
+      <iframe src={url} title={title} height={height} loading="lazy" allow="clipboard-write" />
+    ) : (
+      <div class="empty" style={`min-height:${Math.min(height, 260)}px`}>
+        <p>No demo is connected yet. Add a <code>src</code> to this block to embed one here.</p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .demo {
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .bar {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding: 0.55rem 0.9rem;
+    font-size: var(--step--1);
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .label {
+    font-weight: 620;
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: #fff;
+  }
+
+  .empty {
+    display: grid;
+    place-items: center;
+    padding: var(--s-3);
+    text-align: center;
+    color: var(--muted);
+    font-size: var(--step--1);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 10px,
+      color-mix(in srgb, var(--rule) 45%, transparent) 10px 11px
+    );
+  }
+
+  .empty p {
+    background: var(--card);
+    padding: 0.4rem 0.8rem;
+    max-width: 34ch;
+  }
+</style>

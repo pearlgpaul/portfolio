@@ -1,0 +1,28 @@
+---
+/** A titled resume section with an anchor id. */
+import ScriptTitle from './ScriptTitle.astro';
+
+interface Props {
+  id: string;
+  title: string;
+}
+const { id, title } = Astro.props;
+---
+
+<section id={id} class="section" aria-labelledby={`${id}-title`}>
+  <ScriptTitle id={`${id}-title`} text={title} class="section-title" />
+  <slot />
+</section>
+
+<style>
+  .section + :global(.section) {
+    margin-top: var(--s-6);
+  }
+
+  .section :global(.section-title) {
+    font-size: var(--step-4);
+    margin-bottom: var(--s-4);
+    padding-bottom: var(--s-3);
+    border-bottom: 1.5px solid var(--ink);
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+/** A band of scattered squares that thins out as it falls. Decorative. */
+interface Props {
+  rows?: number;
+  cols?: number;
+  seed?: number;
+}
+const { rows = 5, cols = 72, seed = 7 } = Astro.props;
+let s = seed;
+const rand = () => {
+  s = (s * 16807) % 2147483647;
+  return s / 2147483647;
+};
+const cells: { x: number; y: number; wine: boolean }[] = [];
+for (let y = 0; y < rows; y++) {
+  for (let x = 0; x < cols; x++) {
+    const density = 0.62 * (1 - y / rows) ** 1.6;
+    if (rand() < density) cells.push({ x, y, wine: rand() < 0.12 });
+  }
+}
+---
+
+<svg class="scatter" viewBox={`0 0 ${cols} ${rows}`} preserveAspectRatio="xMidYMin slice" aria-hidden="true" shape-rendering="crispEdges">
+  {cells.map((p) => <rect x={p.x + 0.12} y={p.y + 0.12} width="0.76" height="0.76" class:list={{ wine: p.wine }} />)}
+</svg>
+
+<style>
+  .scatter {
+    display: block;
+    width: 100%;
+    height: clamp(2.2rem, 6vw, 5rem);
+  }
+
+  rect {
+    fill: var(--pink);
+  }
+
+  .wine {
+    fill: var(--accent);
+  }
+</style>

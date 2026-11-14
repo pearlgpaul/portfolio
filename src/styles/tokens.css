@@ -1,0 +1,74 @@
+/*
+ * Design tokens. Every colour, typeface and spacing step used by the site is
+ * defined here, so the whole look can be retuned from this one file.
+ */
+:root {
+  /* Fixed colours: "stationery" that looks the same in light and dark mode
+     (tabs, tape, sticky notes, project folders). */
+  --pink-light: #f6bfd3;
+  --pink: #ee97b9;
+  --wine: #7a1730;
+  --silver: #cfcfcc;
+  --manila: #e9d6ae;
+  --charcoal: #2a2526;
+  --cream: #fbf8f1;
+
+  /* Theme colours: light mode. Dark mode overrides these below. */
+  color-scheme: light;
+  --backdrop: #c6b7ba; /* dusty mauve "desk" behind the folder */
+  --paper: #f3eee4; /* the folder sheet */
+  --card: #fbf8f1; /* lighter paper: notes, figures, raised surfaces */
+  --ink: #2a2526; /* text */
+  --muted: #6b5f62; /* secondary text */
+  --rule: #d3c9c0; /* hairlines */
+  --accent: #7a1730; /* script capitals, links, marks */
+  --highlight: #f6bfd3; /* highlighter behind bold phrases, callouts */
+  --code-bg: #2a2526; /* code blocks */
+  --note-line: rgb(122 23 48 / 0.16); /* ruling on the paper note */
+
+  /* Type */
+  --script: 'Pinyon Script', 'Snell Roundhand', cursive; /* swash capitals only */
+  --display: 'Instrument Serif', 'Times New Roman', serif; /* headings */
+  --text: 'Schibsted Grotesk Variable', 'Helvetica Neue', Arial, sans-serif; /* body */
+  --pixel: 'Silkscreen', ui-monospace, monospace; /* small labels */
+  --code: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(1.8rem, 1.4rem + 1.5vw, 2.5rem);
+  --step-4: clamp(2.8rem, 1.8rem + 4vw, 5rem);
+  --step-5: clamp(3.2rem, 1.4rem + 7.5vw, 7.5rem);
+
+  /* Space */
+  --gutter: clamp(1.1rem, 4vw, 3.5rem);
+  --desk: clamp(0.4rem, 3.4vw, 3.4rem); /* gap between folder and viewport edge */
+  --page: 84rem;
+  --measure: 68ch;
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2.5rem;
+  --s-5: 4rem;
+  --s-6: clamp(4rem, 9vw, 8rem);
+
+  --lift: 0 1px 0 rgb(42 37 38 / 0.06), 0 14px 30px -18px rgb(60 30 40 / 0.45);
+}
+
+/* Dark mode: a black binder on a dark desk. Text turns cream, the wine accent
+   turns pink so it stays readable. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --backdrop: #110e0f;
+  --paper: #231e20;
+  --card: #2f292b;
+  --ink: #f1eae0;
+  --muted: #b9abad;
+  --rule: #4a4144;
+  --accent: #f3a6c3;
+  --highlight: #6c2a43;
+  --code-bg: #151213;
+  --note-line: rgb(243 166 195 / 0.16);
+  --lift: 0 1px 0 rgb(255 255 255 / 0.04), 0 14px 30px -18px rgb(0 0 0 / 0.9);
+}

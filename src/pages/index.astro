@@ -1,0 +1,396 @@
+---
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/Section.astro';
+import ExperienceItem from '@/components/ExperienceItem.astro';
+import TagList from '@/components/TagList.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import ScriptTitle from '@/components/ScriptTitle.astro';
+import SpecStrip from '@/components/SpecStrip.astro';
+import PaperNote from '@/components/PaperNote.astro';
+import PixelPearl from '@/components/PixelPearl.astro';
+import PixelScatter from '@/components/PixelScatter.astro';
+import { person, profile, experience, expertise, skills, education, publications } from '@/data/resume';
+import { inline } from '@/lib/inline';
+import { getProjects, href } from '@/lib/site';
+
+const sections = [
+  { id: 'experience', label: 'Experience' },
+  { id: 'expertise', label: 'Expertise' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'education', label: 'Education' },
+  { id: 'publication', label: 'Publication' },
+  { id: 'projects', label: 'Projects' },
+];
+
+// Template entries never appear on the resume page.
+const projects = (await getProjects()).filter((p) => p.data.status !== 'template').slice(0, 3);
+---
+
+<Base>
+  <div class="wrap">
+    <header class="hero">
+      <h1 class="name">
+        <span class="visually-hidden">{person.name}</span>
+        <ScriptTitle as="span" text={person.givenName} class="line" />
+        <ScriptTitle as="span" text={person.familyName} class="line last" />
+      </h1>
+
+      <SpecStrip
+        items={[
+          { label: 'Role', value: person.title },
+          { label: 'Based in', value: person.location },
+          { label: 'Email', value: person.email, href: `mailto:${person.email}` },
+        ]}
+      />
+
+      <div class="intro">
+        <div class="pearl"><PixelPearl size={168} /></div>
+        <PaperNote tilt={-0.8}>
+          <p>{profile}</p>
+        </PaperNote>
+      </div>
+    </header>
+  </div>
+
+  <PixelScatter />
+
+  <div class="wrap">
+    <div class="body">
+      <nav class="index no-print" aria-label="On this page">
+        <ul>
+          {
+            sections.map((s) => (
+              <li>
+                <a class="label" href={`#${s.id}`}>
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="content">
+        <Section id="experience" title="Experience">
+          {experience.map((role) => <ExperienceItem role={role} />)}
+        </Section>
+
+        <Section id="expertise" title="Expertise">
+          <dl class="groups">
+            {
+              expertise.map((group) => (
+                <div class="group">
+                  <dt>{group.name}</dt>
+                  <dd>
+                    <TagList items={group.items} label={group.name} />
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </Section>
+
+        <Section id="skills" title="Skills">
+          <dl class="skills">
+            {
+              skills.map((cat) => (
+                <div>
+                  <dt>{cat.name}</dt>
+                  <dd>{cat.items}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </Section>
+
+        <Section id="education" title="Education">
+          {
+            education.map((e) => (
+              <div class="entry">
+                <p class="when label">{e.years}</p>
+                <div>
+                  <h3 class="display">{e.degree}</h3>
+                  <p class="org">{e.institution}</p>
+                  <ul class="muted details">
+                    {e.details.map((d) => (
+                      <li>{d}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))
+          }
+        </Section>
+
+        <Section id="publication" title="Publication">
+          {
+            publications.map((p) => (
+              <div class="entry">
+                <p class="when label">{p.short.when}</p>
+                <div>
+                  <h3 class="display pub-title">{p.title}</h3>
+                  <p class="pub-meta">{p.authors}</p>
+                  <p class="pub-meta muted" set:html={inline(p.venue)} />
+                  <p class="pub-meta muted">{p.presented}</p>
+                </div>
+              </div>
+            ))
+          }
+        </Section>
+
+        <Section id="projects" title="Projects">
+          {
+            projects.length > 0 ? (
+              <ul class="project-list">
+                {projects.map((project, i) => (
+                  <li>
+                    <ProjectCard project={project} index={i} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="projects-note">
+                Technical write-ups, source code and live demos are collected on the projects page.
+              </p>
+            )
+          }
+          <p class="projects-link">
+            <a class="button primary" href={href('/projects/')}>Browse all projects</a>
+          </p>
+        </Section>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-top: clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .name {
+    font-size: clamp(3.4rem, 15.5vw, 15.5rem);
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .name :global(.line) {
+    display: block;
+    line-height: 0.82;
+    padding-top: 0.2em;
+    animation: settle 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  }
+
+  .name :global(.line.last) {
+    text-align: right;
+    margin-top: -0.08em;
+    padding-bottom: 0.14em;
+    animation-delay: 0.12s;
+  }
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(0.18em);
+    }
+  }
+
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 40rem);
+    gap: var(--s-4);
+    align-items: center;
+    margin-top: var(--s-5);
+    padding-bottom: var(--s-5);
+  }
+
+  .pearl {
+    justify-self: center;
+    transform: rotate(-6deg);
+  }
+
+  /* ---------- Body ---------- */
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 0;
+    margin-top: var(--s-5);
+  }
+
+  .content {
+    min-width: 0;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Section links, drawn as index tabs on the folder's right edge. */
+  .index {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
+    height: 0;
+    z-index: 2;
+  }
+
+  .index ul {
+    position: absolute;
+    top: 0;
+    left: var(--gutter);
+    display: grid;
+    gap: 3px;
+  }
+
+  .index a {
+    display: block;
+    writing-mode: vertical-rl;
+    padding: 0.9rem 0.42rem 0.9rem 0.5rem;
+    border-radius: 0 9px 9px 0;
+    background: var(--tab, var(--pink-light));
+    color: var(--charcoal);
+    text-decoration: none;
+    font-size: 0.62rem;
+    white-space: nowrap;
+    transition: padding 0.15s ease;
+  }
+
+  .index a:hover {
+    padding-right: 0.8rem;
+  }
+
+  .index li:nth-child(4n + 2) a {
+    --tab: var(--silver);
+  }
+
+  .index li:nth-child(4n + 3) a {
+    --tab: var(--wine);
+    color: var(--cream);
+  }
+
+  .index li:nth-child(4n + 4) a {
+    --tab: var(--manila);
+  }
+
+  /* ---------- Expertise ---------- */
+  .group {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--s-1) var(--s-4);
+    padding-block: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+
+  .group:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .group dt,
+  .skills dt {
+    font-weight: 640;
+  }
+
+  /* ---------- Skills ---------- */
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4) var(--s-5);
+  }
+
+  .skills dd {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 52ch;
+  }
+
+  /* ---------- Education & publication ---------- */
+  .entry {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--s-1) var(--s-4);
+  }
+
+  .entry .when {
+    padding-top: 0.7rem;
+  }
+
+  .entry h3 {
+    font-size: var(--step-3);
+    line-height: 1.08;
+  }
+
+  .entry .org {
+    margin-top: 0.5rem;
+    font-weight: 640;
+    color: var(--accent);
+  }
+
+  .details {
+    margin-top: 0.5rem;
+  }
+
+  .pub-title {
+    max-width: 30ch;
+    margin-bottom: var(--s-2);
+  }
+
+  .pub-meta {
+    max-width: var(--measure);
+  }
+
+  /* ---------- Projects ---------- */
+  .project-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: var(--s-4) var(--s-3);
+  }
+
+  .projects-note {
+    max-width: 44ch;
+    font-size: var(--step-1);
+  }
+
+  .projects-link {
+    margin-top: var(--s-3);
+  }
+
+  @media (max-width: 64rem) {
+    .index {
+      display: none;
+    }
+  }
+
+  @media (max-width: 54rem) {
+    .intro {
+      grid-template-columns: 1fr;
+      margin-top: var(--s-4);
+    }
+
+    .pearl {
+      display: none;
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .group,
+    .entry,
+    .skills {
+      grid-template-columns: 1fr;
+    }
+
+    .entry .when {
+      padding-top: 0;
+    }
+  }
+
+  @media print {
+    .name {
+      font-size: 44pt;
+    }
+
+    .pearl {
+      display: none;
+    }
+  }
+</style>

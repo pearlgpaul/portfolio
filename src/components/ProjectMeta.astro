@@ -1,0 +1,69 @@
+---
+/** The facts at the top of a project page: spec plates plus topic and stack tags. */
+import SpecStrip from './SpecStrip.astro';
+import TagList from './TagList.astro';
+import { statusLabel, type Project } from '@/lib/site';
+
+interface Props {
+  project: Project;
+}
+const { status, date, role, topics, stack } = Astro.props.project.data;
+const when = date.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+const items = [
+  { label: 'Status', value: statusLabel[status] },
+  { label: 'Date', value: when },
+  ...(role ? [{ label: 'Role', value: role }] : []),
+];
+---
+
+<div class="meta">
+  <SpecStrip items={items} />
+  <dl>
+    {
+      topics.length > 0 && (
+        <div>
+          <dt class="label">Topics</dt>
+          <dd>
+            <TagList items={topics} tone="tint" label="Topics" />
+          </dd>
+        </div>
+      )
+    }
+    {
+      stack.length > 0 && (
+        <div>
+          <dt class="label">Built with</dt>
+          <dd>
+            <TagList items={stack} label="Built with" />
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+</div>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-5);
+    align-items: center;
+    padding-block: var(--s-3);
+    border-block: 1.5px solid var(--ink);
+  }
+
+  dl {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  dl > div {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    align-items: center;
+  }
+
+  dt {
+    color: var(--muted);
+  }
+</style>

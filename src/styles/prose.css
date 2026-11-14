@@ -1,0 +1,162 @@
+/* Long-form styles for project write-ups (Markdown / MDX output). */
+.prose {
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+/* Text keeps a readable measure; figures, code and demos use the full column. */
+.prose > * {
+  max-width: var(--measure);
+}
+
+.prose > figure,
+.prose > .demo,
+.prose > pre,
+.prose > table {
+  max-width: 100%;
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: var(--step-3);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-top: 2.4em;
+  padding-top: 0.9em;
+  border-top: 1px solid var(--rule);
+}
+
+.prose > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.prose h3 {
+  font-size: var(--step-1);
+  font-weight: 620;
+  line-height: 1.3;
+  margin-top: 2em;
+}
+
+.prose h4 {
+  font-size: var(--step-0);
+  font-weight: 620;
+  margin-top: 1.8em;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+}
+
+.prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.15em;
+  top: 0.72em;
+  width: 0.5em;
+  height: 1.5px;
+  background: var(--accent);
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  color: var(--accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose li + li {
+  margin-top: 0.45em;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: 1.2em;
+  border-left: 3px solid var(--accent);
+  font-family: var(--display);
+  font-size: var(--step-2);
+  line-height: 1.3;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: 2.5em;
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+  font-family: var(--code);
+  font-size: 0.86em;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 0.3em;
+  padding: 0.1em 0.35em;
+}
+
+/* Code blocks (Shiki) */
+.prose pre {
+  background: var(--code-bg) !important;
+  color: #efe9e4;
+  font-family: var(--code);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  padding: 1.2rem 1.35rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  tab-size: 2;
+  font-variant-ligatures: none;
+}
+
+.prose pre code {
+  font-family: inherit;
+}
+
+/* Tables */
+.prose > table {
+  display: block;
+  overflow-x: auto;
+}
+
+.prose table {
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  width: max-content;
+  min-width: 100%;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 0.6em 1.2em 0.6em 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.prose thead th {
+  font-weight: 620;
+  border-bottom: 1.5px solid var(--ink);
+  white-space: nowrap;
+}
+
+.prose img {
+  border-radius: 4px;
+}

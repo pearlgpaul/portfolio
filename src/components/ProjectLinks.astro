@@ -1,0 +1,36 @@
+---
+/** Buttons for a project's repository, live demo and documentation. */
+import type { Project } from '@/lib/site';
+
+interface Props {
+  project: Project;
+}
+const { repo, demo, docs } = Astro.props.project.data;
+const links = [
+  demo && { label: 'Open live demo', to: demo, primary: true },
+  repo && { label: 'View source on GitHub', to: repo, primary: !demo },
+  docs && { label: 'Read documentation', to: docs, primary: false },
+].filter((l) => !!l);
+---
+
+{
+  links.length > 0 && (
+    <ul class="links">
+      {links.map((l) => (
+        <li>
+          <a class:list={['button', { primary: l.primary }]} href={l.to} rel="noopener">
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+/**
+ * A heading whose first letter is a swash script capital and the rest serif,
+ * e.g. "Experience" -> script E + "xperience".
+ */
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'span' | 'p';
+  id?: string;
+  class?: string;
+}
+const { text, as: Tag = 'h2', id, class: className } = Astro.props;
+const cap = text.slice(0, 1);
+const rest = text.slice(1);
+---
+
+<Tag id={id} class:list={['script-title', className]}>
+  <span class="visually-hidden">{text}</span>
+  <span aria-hidden="true" class="cap">{cap}</span><span aria-hidden="true" class="rest">{rest}</span>
+</Tag>
+
+<style>
+  .script-title {
+    font-family: var(--display);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .cap {
+    font-family: var(--script);
+    color: var(--accent);
+    font-size: 1.62em;
+    line-height: 0;
+    letter-spacing: 0;
+    display: inline-block;
+    vertical-align: -0.1em;
+    margin-right: -0.1em;
+    padding-left: 0.06em;
+  }
+</style>

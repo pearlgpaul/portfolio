@@ -1,0 +1,91 @@
+---
+import Base from '@/layouts/Base.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import ScriptTitle from '@/components/ScriptTitle.astro';
+import { getProjects } from '@/lib/site';
+
+const projects = await getProjects();
+const onlyTemplates = projects.length > 0 && projects.every((p) => p.data.status === 'template');
+---
+
+<Base
+  title="Projects"
+  description="Project write-ups in generative AI, agentic systems, RAG, machine learning and LLM evaluation, with source code and live demos."
+>
+  <div class="wrap">
+    <header class="head">
+      <ScriptTitle as="h1" text="Projects" class="page-title" />
+      <p class="lede">
+        Write-ups in generative AI, agentic systems, retrieval, machine learning and LLM evaluation.
+        Each one covers the problem, the approach and the results, with source code and a live demo
+        where there is one.
+      </p>
+    </header>
+
+    {
+      onlyTemplates && (
+        <p class="notice">
+          The first projects are being written up. Until they are published, the entry below shows
+          the format each one will follow.
+        </p>
+      )
+    }
+
+    {
+      projects.length > 0 ? (
+        <ul class="list">
+          {projects.map((project, i) => (
+            <li>
+              <ProjectCard project={project} index={i} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="notice">No projects are published yet.</p>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+    gap: var(--s-3) var(--s-5);
+    align-items: end;
+    padding-block: clamp(2rem, 6vw, 5rem) var(--s-5);
+  }
+
+  .head :global(.page-title) {
+    font-size: clamp(3.4rem, 13vw, 12rem);
+    line-height: 0.9;
+    padding-top: 0.15em;
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    padding-bottom: 1.2rem;
+  }
+
+  .notice {
+    max-width: 52ch;
+    margin-bottom: var(--s-5);
+    padding: 0.9rem 1.1rem;
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    box-shadow: var(--lift);
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: var(--s-5) var(--s-3);
+  }
+
+  @media (max-width: 54rem) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+/** A small pixel-art pearl, drawn from a grid of squares. Decorative. */
+interface Props {
+  size?: number;
+}
+const { size = 96 } = Astro.props;
+const n = 15;
+const c = (n - 1) / 2;
+const r = n / 2 - 0.4;
+const tones = ['#fffdfa', '#fbe9ee', '#f6cfdc', '#eeb2c8', '#d98fae', '#b96f92'];
+const cells: { x: number; y: number; fill: string }[] = [];
+for (let y = 0; y < n; y++) {
+  for (let x = 0; x < n; x++) {
+    const d = Math.hypot(x - c, y - c);
+    if (d > r) continue;
+    // Light comes from the upper left.
+    const l = Math.hypot(x - c * 0.62, y - c * 0.58) / (r * 1.5);
+    let i = Math.min(tones.length - 1, Math.floor(l * tones.length));
+    if (d > r - 1.1) i = Math.min(tones.length - 1, i + 1);
+    cells.push({ x, y, fill: tones[i] });
+  }
+}
+---
+
+<svg class="pearl" width={size} height={size} viewBox={`0 0 ${n} ${n}`} aria-hidden="true" shape-rendering="crispEdges">
+  {cells.map((p) => <rect x={p.x} y={p.y} width="1.02" height="1.02" fill={p.fill} />)}
+</svg>
+
+<style>
+  .pearl {
+    display: block;
+    flex: none;
+  }
+</style>

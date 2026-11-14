@@ -1,0 +1,35 @@
+---
+/**
+ * A short aside set apart from the text.
+ *
+ *   <Callout title="Limitation">Only evaluated on English-language documents.</Callout>
+ */
+interface Props {
+  title?: string;
+}
+const { title = 'Note' } = Astro.props;
+---
+
+<aside class="callout">
+  <p class="title">{title}</p>
+  <div><slot /></div>
+</aside>
+
+<style>
+  .callout {
+    background: var(--highlight);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.2rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.96rem;
+  }
+
+  .title {
+    font-weight: 640;
+    margin-bottom: 0.25rem;
+  }
+
+  .callout :global(p + p) {
+    margin-top: 0.6em;
+  }
+</style>

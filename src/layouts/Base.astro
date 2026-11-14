@@ -1,0 +1,79 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import { person } from '@/data/resume';
+import { href } from '@/lib/site';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = `${person.name} — ${person.title}, ${person.shortLocation}. Resume and project write-ups.`,
+} = Astro.props;
+const pageTitle = title ? `${title} — ${person.name}` : `${person.name} — ${person.title}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+    <meta name="theme-color" content="#c6b7ba" />
+    <script is:inline>
+      // Light / dark mode. Runs before the page paints so there is no flash.
+      (() => {
+        const KEY = 'theme';
+        const saved = () => {
+          try {
+            return localStorage.getItem(KEY);
+          } catch {
+            return null;
+          }
+        };
+        const preferred = () =>
+          saved() || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const apply = (theme, doc = document) => {
+          doc.documentElement.dataset.theme = theme;
+          const meta = doc.querySelector('meta[name="theme-color"]');
+          if (meta) meta.content = theme === 'dark' ? '#110e0f' : '#c6b7ba';
+        };
+        apply(preferred());
+        // Keep the theme when moving between pages.
+        document.addEventListener('astro:before-swap', (e) => apply(preferred(), e.newDocument));
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('[data-theme-toggle]')) return;
+          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+          try {
+            localStorage.setItem(KEY, next);
+          } catch {}
+          apply(next);
+        });
+        // Follow the system setting until the visitor picks a theme themselves.
+        matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => apply(preferred()));
+      })();
+    </script>
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <SiteHeader />
+    <main id="content" class="folder">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

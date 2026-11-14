@@ -1,0 +1,104 @@
+---
+/** A project shown as a file folder. The whole folder links to the project page. */
+import TagList from './TagList.astro';
+import { href, statusLabel, type Project } from '@/lib/site';
+
+interface Props {
+  project: Project;
+  /** Position in the list; picks the folder colour. */
+  index?: number;
+}
+const { project, index = 0 } = Astro.props;
+const { title, summary, date, topics, status } = project.data;
+const tones = ['pink', 'silver', 'manila'];
+const tone = tones[index % tones.length];
+---
+
+<a class:list={['folder-card', tone]} href={href(`/projects/${project.id}/`)}>
+  <span class="tab label">
+    <span>{date.getFullYear()}</span>
+    {status !== 'complete' && <span class="state">{statusLabel[status]}</span>}
+  </span>
+  <span class="front">
+    <span class="title display">{title}</span>
+    <span class="summary">{summary}</span>
+    <span class="topics"><TagList items={topics} label="Topics" /></span>
+    <span class="open label">Open project</span>
+  </span>
+</a>
+
+<style>
+  .folder-card {
+    --tone: var(--pink-light);
+    /* Folders keep their colours in dark mode, so pin the text colours too. */
+    --ink: var(--charcoal);
+    --accent: var(--wine);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.2s ease;
+    transform-origin: 50% 100%;
+  }
+
+  .silver {
+    --tone: linear-gradient(150deg, #ecebe8, var(--silver) 45%, #e6e5e2 70%, #c4c4c1);
+  }
+
+  .manila {
+    --tone: var(--manila);
+  }
+
+  .folder-card:hover,
+  .folder-card:focus-visible {
+    color: var(--ink);
+    transform: translateY(-5px) rotate(-0.7deg);
+  }
+
+  .tab {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.5rem 1.1rem 0.4rem;
+    background: var(--tone);
+    border-radius: 12px 12px 0 0;
+    filter: brightness(0.94);
+  }
+
+  .state {
+    color: var(--accent);
+  }
+
+  .front {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.4rem 1.4rem 1.2rem;
+    background: var(--tone);
+    border-radius: 0 16px 16px 16px;
+    box-shadow: var(--lift);
+  }
+
+  .title {
+    font-size: var(--step-3);
+    line-height: 1.05;
+  }
+
+  .summary {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .topics {
+    margin-top: auto;
+    padding-top: 0.4rem;
+  }
+
+  .open {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+</style>

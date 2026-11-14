@@ -1,0 +1,34 @@
+---
+import Base from '@/layouts/Base.astro';
+import { href } from '@/lib/site';
+---
+
+<Base title="Page not found">
+  <div class="wrap missing">
+    <h1 class="display">This page doesn't exist.</h1>
+    <p>The address may have changed, or the project may have been renamed.</p>
+    <p class="links">
+      <a class="button primary" href={href('/')}>Go to the resume</a>
+      <a class="button" href={href('/projects/')}>Browse projects</a>
+    </p>
+  </div>
+</Base>
+
+<style>
+  .missing {
+    padding-block: var(--s-6);
+  }
+
+  h1 {
+    font-size: var(--step-5);
+    max-width: 12ch;
+    margin-bottom: var(--s-3);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: var(--s-3);
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import PixelPearl from './PixelPearl.astro';
+import { person } from '@/data/resume';
+---
+
+<footer class="site-footer">
+  <div class="sign">
+    <PixelPearl size={44} />
+    <p class="display">{person.name}</p>
+  </div>
+  <ul>
+    <li><a href={`mailto:${person.email}`}>{person.email}</a></li>
+    <li>{person.location}</li>
+  </ul>
+  <ul>
+    <li><a href={person.github}>GitHub</a></li>
+    <li><a href="#content">Back to top</a></li>
+  </ul>
+</footer>
+
+<style>
+  .site-footer {
+    width: calc(100% - 2 * var(--desk));
+    max-width: 88rem;
+    margin-inline: auto;
+    padding: var(--s-4) var(--gutter) var(--s-5);
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--s-3) var(--s-5);
+    align-items: start;
+    font-size: var(--step--1);
+  }
+
+  .sign {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .sign p {
+    font-size: var(--step-2);
+  }
+
+  li + li {
+    margin-top: 0.3rem;
+  }
+
+  a {
+    text-decoration-color: var(--ink);
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 44rem) {
+    .site-footer {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
